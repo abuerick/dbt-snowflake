@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_payments
+    description: sum amount always positive
+    columns: 
+      - name: payment_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: order unique identifier
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: payment_method
+        description: payment method or the order
+        tests:
+          - accepted_values:
+              values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+      - name: status
+        description: '{{ doc("payment_status") }}'
+        tests: 
+          - accepted_values:
+              values: ['success', 'fail']
+      - name: amount
+        description: monetary amount of the payment
+      - name: created_at
+        description: date in which the order was issued
